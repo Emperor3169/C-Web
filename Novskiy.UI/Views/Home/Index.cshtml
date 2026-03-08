@@ -1,0 +1,93 @@
+@model SelectList
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>@ViewData["text"]</h1>
+<h2>Список</h2>
+<ol type="A">
+    @for (int i = 0; i < 5; i++)
+    {
+        <li>элемент @i списка</li>
+    }
+</ol>
+<hr />
+<h2>Форма</h2>
+<form role="form" method="get" asp-action="index">
+    <ol type="A">
+        <li class="mb-3">
+            <label class="form-label fw-bold">Выберите технологию:</label>
+            <div class="ms-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="technology" id="techMvc" value="mvc" />
+                    <label class="form-check-label" for="techMvc">ASP.NET Core MVC</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="technology" id="techRazor" value="razor" />
+                    <label class="form-check-label" for="techRazor">Razor Pages</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="technology" id="techBlazor" value="blazor" />
+                    <label class="form-check-label" for="techBlazor">Blazor</label>
+                </div>
+            </div>
+        </li>
+
+        <li class="mb-3">
+            <label class="form-label fw-bold">Выберите изученные темы:</label>
+            <div class="ms-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="topics" id="topicHtml" value="html" />
+                    <label class="form-check-label" for="topicHtml">HTML и CSS</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="topics" id="topicBootstrap" value="bootstrap" />
+                    <label class="form-check-label" for="topicBootstrap">Bootstrap</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="topics" id="topicMvc" value="mvc" />
+                    <label class="form-check-label" for="topicMvc">MVC контроллеры и представления</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="topics" id="topicLayout" value="layout" />
+                    <label class="form-check-label" for="topicLayout">Страницы-макеты (Layouts)</label>
+                </div>
+            </div>
+        </li>
+
+        <li class="mb-3">
+            <label class="form-label fw-bold" for="studentName">Фамилия студента:</label>
+            <div class="col-md-4 ms-2">
+                <input class="form-control" type="text" id="studentName" name="studentName" placeholder="Введите фамилию" />
+            </div>
+        </li>
+
+        <li class="mb-3">
+            <label class="form-label fw-bold" for="labNumber">Номер лабораторной работы:</label>
+            <div class="col-md-4 ms-2">
+                <input class="form-control" type="number" id="labNumber" name="labNumber" placeholder="Введите номер" min="1" max="9" />
+            </div>
+        </li>
+
+        <li class="mb-3">
+            <label class="form-label fw-bold" for="selDemo">Выберите элемент списка:</label>
+            <div class="row ms-2">
+                <div class="col-sm-10 offset-sm-2">
+                    <select class="form-select" asp-items="Model" name="selDemo"></select>
+                </div>
+            </div>
+        </li>
+
+        <li class="mb-3">
+            <label class="form-label fw-bold" for="comments">Комментарии:</label>
+            <div class="col-md-6 ms-2">
+                <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Ваши комментарии к работе"></textarea>
+            </div>
+        </li>
+    </ol>
+
+    <div class="ms-2">
+        <button type="submit" class="btn btn-primary">Отправить</button>
+        <button type="reset" class="btn btn-secondary ms-2">Сбросить</button>
+    </div>
+</form>

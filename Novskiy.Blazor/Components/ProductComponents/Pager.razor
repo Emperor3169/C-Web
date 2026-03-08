@@ -1,0 +1,64 @@
+@implements IDisposable
+@rendermode InteractiveServer
+
+@if (ProductService.TotalPages > 1)
+{
+    <div class="btn-group mb-3" role="group" aria-label="Pager">
+        <!-- Кнопка Previous -->
+        <button type="button" class="btn btn-outline-primary @(previousEnabled ? "" : "disabled")"
+                @onclick="@(e => OnPageSelected(ProductService.CurrentPage - 1))">
+            <span aria-hidden="true">&laquo;</span>
+        </button>
+
+        @for (int i = 1; i <= ProductService.TotalPages; i++)
+        {
+            var temp = i;
+            <button type="button" class="btn btn-outline-primary @(IsActive(temp) ? "active" : "")"
+                    @onclick="@(e => OnPageSelected(temp))">
+                @temp
+            </button>
+        }
+
+        <!-- Кнопка Next -->
+        <button type="button" class="btn btn-outline-primary @(nextEnabled ? "" : "disabled")"
+                @onclick="@(e => OnPageSelected(ProductService.CurrentPage + 1))">
+            <span aria-hidden="true">&raquo;</span>
+        </button>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public IProductService<Novskiy.Domain.Entities.Dish> ProductService { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        ProductService.ListChanged += StateHasChanged;
+    }
+
+    // Кнопка Previous доступна?
+    bool previousEnabled => ProductService.CurrentPage != 1;
+    
+    // Кнопка Next доступна?
+    bool nextEnabled => ProductService.CurrentPage != ProductService.TotalPages;
+    
+    // Это текущая страница?
+    bool IsActive(int pageNo) => pageNo == ProductService.CurrentPage;
+
+    // Обработчик клика кнопки
+    async Task OnPageSelected(int pageNo)
+    {
+        if (pageNo >= 1 && pageNo <= ProductService.TotalPages)
+        {
+            await ProductService.GetProducts(pageNo);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (ProductService != null)
+        {
+            ProductService.ListChanged -= StateHasChanged;
+        }
+    }
+}

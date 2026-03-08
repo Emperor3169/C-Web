@@ -1,0 +1,56 @@
+@using Novskiy.Domain.Models
+@using Novskiy.UI.Extensions
+@model Dictionary<int, CartItem>
+
+@{
+    ViewData["Title"] = "Корзина заказов";
+}
+
+<!-- список объектов -->
+@if (Model == null || !Model.Any())
+{
+    <h2 class="m-2">Корзина пуста</h2>
+}
+else
+{
+    <h2 class="m-2">Ваша корзина:</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Изображение</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Кол-во</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img src="@item.Value.Item.Image" width="200" /></td>
+                    <td>@item.Value.Item.Name</td>
+                    <td>@item.Value.Item.Description</td>
+                    <td>@item.Value.Qty</td>
+                    <td>
+                        <a class="btn btn-danger"
+                           asp-action="Remove"
+                           asp-controller="Cart"
+                           asp-route-id="@item.Value.Item.Id">
+                            <i class="fa-solid fa-trash"></i> Удалить
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><strong>Итого калорий:</strong></td>
+                @{
+                    var cart = Context.Session.Get<Cart>("cart");
+                    <td colspan="2"><strong>@(cart?.TotalCalories ?? 0) калорий</strong></td>
+                }
+            </tr>
+        </tfoot>
+    </table>
+}

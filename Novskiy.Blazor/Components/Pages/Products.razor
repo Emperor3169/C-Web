@@ -1,0 +1,39 @@
+@page "/products"
+@rendermode InteractiveServer
+@using Novskiy.Domain.Entities
+@using Novskiy.Blazor.Services
+@using Novskiy.Blazor.Components.ProductComponents
+
+<PageTitle>Меню</PageTitle>
+
+<h1>Меню ресторана</h1>
+
+<CascadingValue Value="ProductService">
+    <div class="row">
+        <div class="col-md-8">
+            <DishesList DishSelected="ShowDetails" />
+            <Pager />
+        </div>
+        <div class="col-md-4">
+            <DishDetails Dish="SelectedDish" />
+        </div>
+    </div>
+</CascadingValue>
+
+@code {
+    [Inject]
+    public IProductService<Dish> ProductService { get; set; } = default!;
+
+    [Parameter]
+    public Dish? SelectedDish { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.GetProducts();
+    }
+
+    void ShowDetails(int id)
+    {
+        SelectedDish = ProductService.Products.FirstOrDefault(d => d.Id == id);
+    }
+}

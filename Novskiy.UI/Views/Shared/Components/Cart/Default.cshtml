@@ -1,0 +1,6 @@
+@using Novskiy.Domain.Models
+@model Cart
+
+<a asp-action="Index" asp-controller="Cart" class="navbar-text ms-auto text-decoration-none">
+    @(Model?.TotalCalories ?? 0) калорий <i class="fa-solid fa-cart-shopping"></i> (@(Model?.Count ?? 0))
+</a>

@@ -1,0 +1,25 @@
+@using Novskiy.Domain.Entities
+@model Dish
+@{
+    var request = ViewContext.HttpContext.Request;
+    var returnUrl = request.Path + request.QueryString.ToUriComponent();
+}
+
+<div class="col">
+    <div class="card h-100 border-dark">
+        <img class="card-img-top" src="@Model.Image" alt="@Model.Name" />
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.Description</p>
+            <h5><span class="badge bg-secondary">@Model.Calories калорий</span></h5>
+        </div><!-- card-body -->
+        <div class="card-footer text-center">
+            <a class="btn btn-outline-primary"
+               asp-action="Add" asp-controller="Cart"
+               asp-route-id="@Model.Id"
+               asp-route-returnurl="@returnUrl">
+                Добавить в корзину <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div><!-- card-footer -->
+    </div><!-- card -->
+</div><!-- col -->

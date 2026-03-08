@@ -1,0 +1,67 @@
+@page "{id:int}"
+@model Novskiy.UI.Areas.Admin.Pages.EditModel
+
+@{
+    ViewData["Title"] = "Edit Dish";
+}
+
+<h1>Edit</h1>
+
+<h4>Dish</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Dish.Id" />
+            <input type="hidden" asp-for="Dish.Image" />
+            
+            <div class="mb-3">
+                <label asp-for="Dish.Name" class="form-label"></label>
+                <input asp-for="Dish.Name" class="form-control" />
+                <span asp-validation-for="Dish.Name" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Dish.Description" class="form-label"></label>
+                <input asp-for="Dish.Description" class="form-control" />
+                <span asp-validation-for="Dish.Description" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Dish.Calories" class="form-label"></label>
+                <input asp-for="Dish.Calories" class="form-control" />
+                <span asp-validation-for="Dish.Calories" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Dish.CategoryId" class="form-label">Category</label>
+                <select asp-for="Dish.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Текущее изображение:</label>
+                <div>
+                     <img src="@Model.Dish.Image" width="100" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Image" class="form-label">Новое изображение (необязательно)</label>
+                <input asp-for="Image" class="form-control" type="file" />
+            </div>
+            
+            <div class="form-group mb-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,80 @@
+@using Novskiy.Domain.Entities
+@using Novskiy.Domain.Models
+@model ListModel<Dish>
+
+@{
+    ViewData["Title"] = "Каталог";
+    var request = ViewContext.HttpContext.Request;
+    var returnUrl = request.Path + request.QueryString.ToUriComponent();
+    var categories = ViewData["categories"] as IEnumerable<Category>;
+    
+    // Получаем текущую категорию из маршрута
+    string? category = request.RouteValues["category"]?.ToString();
+    
+    // Рассчитываем предыдущую и следующую страницы
+    int prev = Model.CurrentPage == 1 ? 1 : Model.CurrentPage - 1;
+    int next = Model.CurrentPage == Model.TotalPages ? Model.TotalPages : Model.CurrentPage + 1;
+}
+
+<h2 class="m-3">Блюда меню</h2>
+<div class="row">
+    <!-- Выбор категории -->
+    <div class="col-2 border-2">
+        <ul class="nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   data-bs-toggle="dropdown"
+                   href="#"
+                   role="button"
+                   aria-expanded="false">
+                    @ViewData["currentCategory"]
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item"
+                           asp-controller="Product"
+                           asp-action="Index"
+                           asp-route-category="@null">Все</a>
+                    </li>
+                    @if (categories != null)
+                    {
+                        @foreach (var item in categories)
+                        {
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-controller="Product"
+                                   asp-action="Index"
+                                   asp-route-category="@item.NormalizedName">
+                                    @item.Name
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </li>
+        </ul>
+    </div><!-- Выбор категории -->
+
+    <div class="col-10">
+        @if (Model != null && Model.Items.Any())
+        {
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                @foreach (var item in Model.Items)
+                {
+                    <partial name="_ProductItemPartial" model="@item" />
+                }
+            </div>
+        }
+        else
+        {
+            <h4 class="text-warning">@ViewData["Error"]</h4>
+        }
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <pager current-page="Model.CurrentPage"
+           total-pages="Model.TotalPages"
+           category="@category"></pager>
+}

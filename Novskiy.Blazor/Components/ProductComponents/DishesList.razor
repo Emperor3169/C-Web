@@ -1,0 +1,62 @@
+@implements IDisposable
+@rendermode InteractiveServer
+
+<h3>Блюда меню</h3>
+@if (ProductService.Products != null && ProductService.Products.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ProductService.Products)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <button class="btn btn-outline-dark"
+                                @onclick="@(() => OnDishSelected(item.Id))">
+                            Подробно
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Загрузка...</em></p>
+}
+
+@code {
+    [CascadingParameter]
+    public IProductService<Novskiy.Domain.Entities.Dish> ProductService { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<int> DishSelected { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductService.ListChanged += StateHasChanged;
+    }
+
+    public async Task OnDishSelected(int id)
+    {
+        if (DishSelected.HasDelegate)
+        {
+            await DishSelected.InvokeAsync(id);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (ProductService != null)
+        {
+            ProductService.ListChanged -= StateHasChanged;
+        }
+    }
+}
